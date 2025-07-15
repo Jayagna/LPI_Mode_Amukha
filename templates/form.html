@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interest Rate Predictor</title>
+</head>
+<body>
+    <h2>Enter Loan Applicant Details</h2>
+    <form action="/predict" method="post">
+        {% for col in columns %}
+            <label>{{ col }}:</label>
+            <input type="text" name="{{ col }}" required><br><br>
+        {% endfor %}
+        <input type="submit" value="Predict Interest Rate">
+    </form>
+</body>
+</html>

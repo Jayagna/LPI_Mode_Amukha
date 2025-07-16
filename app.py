@@ -12,12 +12,12 @@ st.title("📈 Interest Rate Predictor")
 st.write("Select or enter the required features below to get the predicted loan interest rate:")
 
 # Dropdown options for categorical variables
-state_options = ['SD', 'IN', 'MT', 'MS', 'Other']
+state_options = ['South Dakota', 'Indiana', 'Montana', 'Mississippi', 'Others']
 loan_purpose_options = [
-    'educational', 'home_improvement', 'moving', 'house', 'debt_consolidation',
-    'credit_card', 'major_purchase', 'small_business', 'other'
+    'Educational', 'Home Improvement', 'Moving', 'House', 'Debt Consolidation',
+    'Credit Card', 'Major Purchase', 'Small Business', 'Other Reason'
 ]
-home_ownership_options = ['RENT', 'OTHER']
+home_ownership_options = ['Rent', 'Other']
 
 # Streamlit dropdowns
 selected_state = st.selectbox("Select State", state_options)

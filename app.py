@@ -9,44 +9,49 @@ columns = pickle.load(open("feature_columns.pkl", "rb"))
 
 st.title("📈 Interest Rate Predictor")
 
-st.write("Select or enter the required features below to get the predicted interest rate:")
+st.write("Select or enter the required features below to get the predicted loan interest rate:")
 
-# Manually define which categorical values you want to treat as dropdowns
-state_options = ['MS', 'IN', 'SD', 'MT']  # replace with actual states in your model
+# Dropdown options for categorical variables
+state_options = ['SD', 'IN', 'MT', 'MS', 'Other']
 loan_purpose_options = [
-    'educational', 'house', 'other', 'credit_card', 'small_business',
-    'debt_consolidation', 'home_improvement', 'moving', 'major_purchase'
-]  # replace with actual loan purposes in your model
+    'educational', 'home_improvement', 'moving', 'house', 'debt_consolidation',
+    'credit_card', 'major_purchase', 'small_business', 'other'
+]
+home_ownership_options = ['RENT', 'OTHER']
 
-# Dropdowns for state and loan purpose
+# Streamlit dropdowns
 selected_state = st.selectbox("Select State", state_options)
 selected_purpose = st.selectbox("Select Loan Purpose", loan_purpose_options)
+selected_home = st.selectbox("Select Home Ownership Type", home_ownership_options)
 
-# Other numerical inputs
+# Numeric feature input
 other_cols = [
     col for col in columns
-    if not col.startswith('State_') and not col.startswith('Loan_Purpose_')
+    if not col.startswith('State_') and
+       not col.startswith('Loan_Purpose_') and
+       not col.startswith('Home_Ownership_')
 ]
 
 user_input = {}
-
 for col in other_cols:
     user_input[col] = st.number_input(col, value=0.0, format="%.4f")
 
-# Prepare final input vector
+# Build feature vector
 input_vector = []
-
 for col in columns:
     if col.startswith("State_"):
-        state_code = col.replace("State_", "")
-        input_vector.append(1 if state_code == selected_state else 0)
+        state_name = col.replace("State_", "")
+        input_vector.append(1 if state_name.upper() == selected_state.upper() else 0)
     elif col.startswith("Loan_Purpose_"):
-        purpose_code = col.replace("Loan_Purpose_", "")
-        input_vector.append(1 if purpose_code == selected_purpose else 0)
+        purpose_name = col.replace("Loan_Purpose_", "")
+        input_vector.append(1 if purpose_name.lower() == selected_purpose.lower() else 0)
+    elif col.startswith("Home_Ownership_"):
+        home_status = col.replace("Home_Ownership_", "")
+        input_vector.append(1 if home_status.upper() == selected_home.upper() else 0)
     else:
         input_vector.append(user_input[col])
 
-# Predict on button click
+# Prediction
 if st.button("Predict Interest Rate"):
     input_df = pd.DataFrame([input_vector], columns=columns)
     prediction = model.predict(input_df)[0]
